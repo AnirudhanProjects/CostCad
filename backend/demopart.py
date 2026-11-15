@@ -17,5 +17,5 @@ part = trimesh.boolean.union([base, thin_wall, block, shelf], engine="manifold")
 part.export("../samples/demo_flawed.stl")
 
 print("watertight:", part.is_watertight)
-print("volume (mm^3):", round(part.volume, 1))
+print("volume (mm^3):", round(part.volume, 1))  
 print("bounding box (mm):", part.extents.round(1))

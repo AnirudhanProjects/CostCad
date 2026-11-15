@@ -38,6 +38,7 @@ async def analyze(file: UploadFile = File(...)):
             "cnc_aluminium": round(float(cnc_cost(mesh)), 2),
         },
         "issues": {
+            "thin_wall_count": int(len(thin_pts)),
             "thin_wall_points": thin_pts[:500].round(2).tolist(),
             "overhang_triangles": mesh.triangles[bad][:500].round(2).tolist(),
             "overhang_area_mm2": round(float(mesh.area_faces[bad].sum()), 1),
