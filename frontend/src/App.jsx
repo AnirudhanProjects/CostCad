@@ -44,15 +44,24 @@ function Overhangs({ triangles }) {
   );
 }
 
+function delta(before, after) {
+  const diff = after - before;
+  const pct = (diff / before) * 100;
+  const sign = diff > 0 ? "+" : "−";
+  return `${sign}$${Math.abs(diff).toFixed(2)} (${sign}${Math.abs(pct).toFixed(0)}%)`;
+}
+
 export default function App() {
   const [geometry, setGeometry] = useState(null);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [prev, setPrev] = useState(null);
 
   async function onFile(e) {
     const file = e.target.files[0];
     if (!file) return;
+    const before = result;
     setError("");
     setResult(null);
     setLoading(true);
@@ -64,7 +73,9 @@ export default function App() {
       form.append("file", file);
       const res = await fetch(`${API}/analyze`, { method: "POST", body: form });
       if (!res.ok) throw new Error((await res.json()).detail || "Analysis failed");
-      setResult(await res.json());
+      const data = await res.json();
+      setPrev(before);
+      setResult(data);
     } catch (err) {
       setError(String(err.message || err));
     } finally {
@@ -88,6 +99,23 @@ export default function App() {
               Fixing the issues would save ${result.savings_if_fixed.print_pla} (print)
               / ${result.savings_if_fixed.cnc_aluminium} (CNC)
             </p>
+            {prev && (
+              <div
+                style={{
+                  background: "#1d2530",
+                  border: "1px solid #3a4655",
+                  borderRadius: 8,
+                  padding: "8px 12px",
+                  margin: "12px 0",
+                }}
+              >
+                <b>Vs previous upload</b>
+                <div>Print: {delta(prev.cost.print_pla, result.cost.print_pla)}</div>
+                <div>
+                  CNC: {delta(prev.cost.cnc_aluminium, result.cost.cnc_aluminium)}
+                </div>
+              </div>
+            )}
             <h3>Issues</h3>
             <p style={{ color: "red" }}>
               Thin-wall points: {result.issues.thin_wall_count}
