@@ -5,7 +5,7 @@ import trimesh
 
 def thin_wall_points(mesh, limit_mm=1.5, n=3000):
     """Return the locations where the wall is thinner than limit_mm."""
-    pts, face_idx = trimesh.sample.sample_surface(mesh, n)
+    pts, face_idx = trimesh.sample.sample_surface(mesh, n, seed=0)
     normals = mesh.face_normals[face_idx]
     origins = pts - normals * 1e-4
     locs, ray_idx, _ = mesh.ray.intersects_location(
