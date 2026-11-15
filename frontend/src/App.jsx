@@ -84,6 +84,10 @@ export default function App() {
             <h3>Cost</h3>
             <p>3D print (PLA): <b>${result.cost.print_pla}</b></p>
             <p>CNC (aluminium): <b>${result.cost.cnc_aluminium}</b></p>
+            <p style={{ opacity: 0.7, fontSize: 13 }}>
+              Fixing the issues would save ${result.savings_if_fixed.print_pla} (print)
+              / ${result.savings_if_fixed.cnc_aluminium} (CNC)
+            </p>
             <h3>Issues</h3>
             <p style={{ color: "red" }}>
               Thin-wall points: {result.issues.thin_wall_count}
